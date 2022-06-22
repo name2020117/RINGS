@@ -1,0 +1,36 @@
+- name: Clone free5gc
+  git:
+    repo: https://github.com/free5gc/free5gc.git
+    dest: "/home/{{home_dir}}/free5gc"
+    clone: true
+    update: true
+  become: false
+  ignore_errors: true
+
+- name: Clone gtp5g
+  git:
+    repo: https://github.com/free5gc/gtp5g.git
+    dest: "/home/{{home_dir}}/gtp5g" # TODO: need to make variable for Chameleon
+    clone: true
+    update: true
+  become: false
+  ignore_errors: true
+
+# FIXME: go not recognized during make, even if go is replaced with path, still fails
+# - name: Make free5gc
+#   community.general.make:
+#     chdir: "/home/{{home_dir}}/free5gc"
+#   become: false
+
+# FIXME: go not recognized during make, even if go is replaced with path, still fails
+# - name: Make gtp5g
+#   community.general.make:
+#     chdir: "/home/{{home_dir}}/gtp5g"
+#   become: false
+
+# FIXME: go not recognized during make, even if go is replaced with path, still fails
+# - name: Make Install gtp5g
+#   community.general.make:
+#     chdir: "/home/{{home_dir}}/gtp5g"
+#     target: install
+#   become: true

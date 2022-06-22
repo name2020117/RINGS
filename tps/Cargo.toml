@@ -1,0 +1,27 @@
+[package]
+name = "teleps"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+kafka = "0.9"
+opentelemetry = "0.17"
+opentelemetry-jaeger = "0.16"
+opentelemetry-otlp = "0.10"
+chrono = {version = "0.4", features = ["serde"]}
+serde = {version = "1.0", features = ["derive"]}
+serde_json = "1.0"
+anyhow = "1.0"
+local-ip-address = "0.4"
+csv = "1.1"
+clap = { version = "3.2.6", features = ["derive"] }
+
+[[bin]]
+name = "pub"
+path = "src/bin/publisher.rs"
+
+[[bin]]
+name = "sub"
+path = "src/bin/subscriber.rs"

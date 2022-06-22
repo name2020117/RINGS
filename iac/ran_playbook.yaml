@@ -1,0 +1,45 @@
+---
+- name: Set up local for Chameleon
+  hosts: localhost
+  vars_files:
+    - variables.yaml
+  tasks:
+    - include_tasks: ./tasks/add_vm_to_hosts.yaml
+      vars:
+        ips: "{{ue_ips}}"
+        group_name: ues
+
+- name: UERANSIM Playbook
+  hosts: ues
+  remote_user: root
+  vars_files:
+    - ./variables.yaml
+  tasks:
+    - name: Update and upgrade apt
+      apt:
+        update_cache: true
+        upgrade: full
+      become: true
+      tags: install
+
+    - name: Install underlying packages needed for ran
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+      loop: "{{ran_packages}}"
+      become: true
+      tags: install
+
+    - include_tasks: ./tasks/install_rust.yaml
+      tags: install
+
+
+    # WARN: overrides any changes in the repo,
+    - include_tasks: ./tasks/build_ueransim.yaml
+    - include_tasks: ./tasks/set_ueransim_params.yaml
+      vars:
+        # WARN: this needs to be updated for the UE
+        ue_internal_ip: "{{ue1_internal_ip}}"
+        core_ip: "{{core_network_ips[0]}}"
+...

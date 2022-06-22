@@ -1,0 +1,62 @@
+---
+- name: Set up local for Chameleon
+  hosts: localhost
+  vars_files:
+    - variables.yaml
+  tasks:
+    - include_tasks: ./tasks/add_vm_to_hosts.yaml
+      vars:
+        ips: "{{kafka_broker_ips}}"
+        group_name: broker
+
+- name: Kafka Playbook
+  hosts: broker
+  vars_files:
+    - ./variables.yaml
+  tasks:
+    - name: Update and upgrade apt
+      apt:
+        update_cache: true
+        upgrade: full
+      become: true
+      tags: install
+
+    - name: Install underlying packages needed for kafka
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+      loop:
+        - default-jre
+      become: yes
+      tags: install
+
+    - name: Download kafka tarball
+      get_url:
+        url: https://dlcdn.apache.org/kafka/3.2.0/kafka_2.13-3.2.0.tgz
+        dest: "/home/{{home_dir}}/{{kafka_version}}.tgz"
+
+    - name: Unarchive kafka
+      ansible.builtin.unarchive:
+        src: "/home/{{home_dir}}/{{kafka_version}}.tgz"
+        dest: "/home/{{home_dir}}/"
+        remote_src: true
+
+    - name: Changing listener
+      lineinfile:
+        path: "/home/{{home_dir}}/{{kafka_version}}/config/server.properties"
+        regexp: "#listeners=PLAINTEXT://:9092"
+        line: "listeners=PLAINTEXT://:9092"
+
+    - name: Changing public listener
+      lineinfile:
+        path: "/home/{{home_dir}}/{{kafka_version}}/config/server.properties"
+        regexp: "#advertised.listeners=PLAINTEXT://your.host.name:9092"
+        line: "advertised.listeners=PLAINTEXT://{{kafka_broker_ips[0]}}:9092"
+
+    - name: Adding zookeeper connects
+      lineinfile:
+        path: /home/{{home_dir}}/{{kafka_version}}/config/server.properties
+        regexp: "zookeeper.connect=localhose:2181"
+        line: "zookeeper.connect={{kafka_broker_internal_ip}}:2181"
+...

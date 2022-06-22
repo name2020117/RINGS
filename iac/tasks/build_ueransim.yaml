@@ -1,0 +1,19 @@
+- name: Clone UERANSIM
+  git:
+    repo: https://github.com/aligungr/UERANSIM
+    dest: "/home/{{home_dir}}/UERANSIM" # TODO: need to make variable for Chameleon
+    clone: true
+    update: true
+    version: v3.1.0
+  become: false
+  ignore_errors: true
+
+- name: Install cmake
+  shell: snap install cmake --classic
+  become: true
+
+# FIXME: doesn't actually build due to go error
+- name: Make UERANSIM
+  community.general.make:
+    chdir: "/home/{{home_dir}}/UERANSIM"
+  become: false

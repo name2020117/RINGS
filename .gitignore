@@ -1,0 +1,5 @@
+/tps/target
+/tps/Cargo.lock
+/tps/pyenv/
+/tps/.ipynb_checkpoints
+/tps/kafka_2.12-3.2.0

@@ -1,0 +1,17 @@
+- name: Networking p1
+  shell: sysctl -w net.ipv4.ip_forward=1
+  become: true
+
+- name: Networking p2
+  shell: iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
+  become: true
+
+- name: Stop ufw
+  ansible.builtin.systemd:
+    state: stopped
+    name: ufw
+  become: true
+
+# - name: Networking p3
+#   shell: iptables -I FORWARD 1 -j ACCEPT
+#   become: true

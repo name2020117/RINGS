@@ -1,0 +1,12 @@
+./test.sh TestGUTIRegistration;
+./test.sh TestServiceRequest;
+./test.sh TestXnHandover;
+./test.sh TestDeregistration;
+./test.sh TestPDUSessionReleaseRequest;
+./test.sh TestPaging;
+./test.sh TestN2Handover;
+./test.sh TestReSynchronization;
+sudo ./test_ulcl.sh TestRequestTwoPDUSessions;
+./test.sh TestNon3GPP;
+./test.sh TestDuplicateRegistration;
+./test.sh TestEAPAKAPrimeAuthenticat;

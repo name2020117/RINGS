@@ -1,0 +1,37 @@
+- name: Install node package manager
+  npm:
+    name: "{{item}}"
+    global: true
+  loop:
+    - n
+    - yarn
+  become: true
+
+- name: Install nodejs
+  shell: n latest
+  become: true
+
+# NOTE: Below is the method by free5gc. It installs a node too out-of-date for the webconsole
+# - name: Add yarn key
+#   ansible.builtin.apt_key:
+#     url: https://dl.yarnpkg.com/debian/pubkey.gpg
+#   become: true
+# - name: Add yarn to sources
+#   ansible.builtin.apt_repository:
+#     repo: deb https://dl.yarnpkg.com/debian/ stable main
+#     filename: /etc/apt/sources.list.d/yarn.list
+#   become: true
+# - name: Update and upgrade apt to get nodejs and yarn
+#   apt:
+#     update_cache: true
+#     upgrade: full
+#   become: true
+#
+# - name: Install nodejs and yarn
+#   apt:
+#     name: "{{item}}"
+#     state: present
+#   loop:
+#     - yarn
+#     - nodejs
+#   become: true

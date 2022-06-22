@@ -1,0 +1,68 @@
+# we are assuming that the go install was great and nothing went wrong...
+- name: check if go exists
+  stat:
+    path: /usr/local/go/
+  register: go_installed
+
+- name: Download the Go tarball
+  get_url:
+    url: "{{ go_download_location }}"
+    dest: /usr/local/src/{{ go_tarball }}
+    checksum: "{{ go_tarball_checksum }}"
+  when: go_installed.stat.exists == false
+  become: true
+
+- name: Extract the Go tarball if Go is not yet installed
+  unarchive:
+    src: /usr/local/src/{{ go_tarball }}
+    dest: /usr/local
+    copy: false
+  when: go_installed.stat.exists == false
+  become: true
+
+- name: make go bin dir
+  shell: "mkdir -p /home/{{home_dir}}/go/bin"
+- name: make go pkg dir
+  shell: "mkdir -p /home/{{home_dir}}/go/pkg"
+- name: make go src dir
+  shell: "mkdir -p /home/{{home_dir}}/go/src"
+- name: copy export variable file for bashrc over
+  copy:
+    src: ../files/go_vars.sh
+    dest: "/home/{{home_dir}}/"
+
+- name: Ensure GOPATH is set in bashrc
+  ansible.builtin.lineinfile:
+    path: "/home/{{home_dir}}/.bashrc"
+    # regexp: '^export GOPATH'
+    line: export GOPATH=$HOME/go
+- name: Ensure go bin path is set in bashrc
+  ansible.builtin.lineinfile:
+    path: "/home/{{home_dir}}/.bashrc"
+    # regexp: '^export PATH=$GOPATH'
+    line: export PATH=$GOPATH/bin:$PATH
+- name: Ensure GOROOT is set in bashrc
+  ansible.builtin.lineinfile:
+    path: "/home/{{home_dir}}/.bashrc"
+    # regexp: '^export GOROOT'
+    line: export GOROOT=/usr/local/go
+- name: Ensure GOROOT bin is set in bashrc
+  ansible.builtin.lineinfile:
+    path: "/home/{{home_dir}}/.bashrc"
+    # regexp: '^export PATH=$PATH:$GOPATH'
+    line: export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
+- name: Ensure GO111 module is set to auto
+  ansible.builtin.lineinfile:
+    path: "/home/{{home_dir}}/.bashrc"
+    # regexp: '^export GO111'
+    line: export GO111MODULE=auto
+
+# NOTE: source does not work in ansible... I do not know how to fix this...
+# - name: source the .bashrc to have all of these
+#   shell: "source /home/{{home_dir}}/.bashrc"
+- name: source bashrc
+  shell: ". /home/{{home_dir}}/.bashrc"
+
+- name: install go logrus
+  # shell: "go get -u github.com/sirupsen/logrus"
+  shell: "/usr/local/go/bin/go get -u github.com/sirupsen/logrus"

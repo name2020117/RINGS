@@ -1,0 +1,18 @@
+- name: In config/amfcg.yaml, Replace ngapIpList IP from 127.0.0.1 to internal IP
+  ansible.builtin.replace:
+    path: /home/{{home_dir}}/free5gc/config/amfcfg.yaml
+    # WARN: very fragile
+    regexp: '^    - 127\.0\.0\.18$'
+    replace: '    - {{core_ip}}'
+- name: In config/smfcfg.yaml, replace interface for UPF
+  ansible.builtin.replace:
+    path: /home/{{home_dir}}/free5gc/config/smfcfg.yaml
+    # WARN: very fragile
+    regexp: '^              - 127.0.0.8$'
+    replace: '              - {{core_ip}}'
+- name: In config/upfcfg.yam.yaml, change gtpu IP
+  ansible.builtin.replace:
+    path: /home/{{home_dir}}/free5gc/config/upfcfg.yaml
+    # WARN: very fragile
+    regexp: '^  gtpu:\n    - addr: 127.0.0.8$'
+    replace: '  gtpu:\n    - addr: {{core_ip}}'
