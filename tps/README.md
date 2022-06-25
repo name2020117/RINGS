@@ -7,8 +7,13 @@ bin/kafka-topics.sh --create --topic test --bootstrap-server  129.114.26.170:909
 ```
 
 # Run Kafka Consumer
+with cargo:
 ```sh
 cargo run --bin sub -- -b 129.114.26.170 -p 9092 -t test
+```
+with binary on cham vm
+```sh
+build/nr-binder 10.56.3.18 ./sub -b 129.114.26.170 -p 9092 -t test
 ```
 
 # Run Kafka Producer

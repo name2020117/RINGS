@@ -13,7 +13,6 @@ fn main() {
     // WARN: not handling write error potential
     wtr.write_record(&["sender", "send_time", "receive_time"])
         .unwrap();
-    // let mut consumer = Consumer::from_hosts(vec!["localhost:9092".to_owned()])
     let mut consumer = Consumer::from_hosts(vec![format!("{}:{}", args.broker_address, args.port)])
         .with_topic(args.topic)
         .create()

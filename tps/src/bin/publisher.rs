@@ -49,7 +49,7 @@ fn main() -> Result<(), opentelemetry::trace::TraceError> {
                 ))
                 .unwrap();
             println!("sent the message");
-            sleep(Duration::from_secs(10));
+            sleep(Duration::from_secs(5));
         }
     });
     global::shutdown_tracer_provider();
