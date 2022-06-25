@@ -4,9 +4,15 @@ ssh_key_location: ~/.ssh/RINGS_TACC.pem
 core_network_ips:
   - 129.114.25.92
 core_network_internal_ip: 10.56.2.245
+# WARN: currently, I do not iterate through all UE at once, and it has to be done manually.
+# FIXME: Change this so the ansible script can iterate through all at once
 ue_ips:
-  - 129.114.26.36
-ue1_internal_ip: 10.56.3.18
+  # - 129.114.26.36 # ue1
+  # - 129.114.26.92 # ue2
+  - 129.114.27.215 # ue3
+# ue1_internal_ip: 10.56.3.18 # ue1
+# ue1_internal_ip: 10.56.2.120 #ue2
+ue1_internal_ip: 10.56.3.43 # ue3
 network_interface: "ens3"
 
 home_dir: cc
@@ -46,5 +52,4 @@ kafka_version: kafka_2.13-3.2.0
 
 ansible_requirements:
   - "ansible.posix"
-
 ...

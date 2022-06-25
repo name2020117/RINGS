@@ -19,6 +19,9 @@ build/nr-binder 10.56.3.18 ./sub -b 129.114.26.170 -p 9092 -t test
 # Run Kafka Producer
 ```sh
 cargo run --bin pub -- -b 129.114.26.170 -p 9092 -t test
+cargo run --bin pub -- -b 129.114.26.170 -p 9092 -t test -n 5 -s 2
 ```
 
-# Extract Logs
+# Results
+- logs are stored in [logs directory](./logs)
+- analsis is shown in the [python notebook](./analysis.ipynb)

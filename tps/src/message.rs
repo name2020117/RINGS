@@ -9,6 +9,7 @@ use std::{
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Message {
     pub sender_ip: String,
+    pub broker_ip: String,
     pub receiver_ip: String,
     topic: String,
     #[serde(with = "ts_nanoseconds_option")]
@@ -20,16 +21,17 @@ pub struct Message {
 impl Message {
     pub fn new(
         sender_ip: String,
-        receiver_ip: String,
+        broker_ip: String,
         topic: String,
         send_time: Option<DateTime<Utc>>,
     ) -> Self {
         Self {
             sender_ip,
-            receiver_ip,
             send_time,
             receive_time: None,
             topic,
+            broker_ip,
+            receiver_ip: String::new(),
         }
     }
 
@@ -51,15 +53,20 @@ impl Message {
     pub fn add_recieve_time(&mut self, recieve_time: DateTime<Utc>) {
         self.receive_time = Some(recieve_time);
     }
+
+    pub fn add_reciever_ip(&mut self, reciever_ip: String) {
+        self.receiver_ip = reciever_ip;
+    }
 }
 
 impl Display for Message {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(
             f,
-            "message sent at {} from {} -> {}",
+            "Message sent at {} from {} -> {}.\nCollected message at {}",
             self.send_time.unwrap(),
             self.sender_ip,
+            self.broker_ip,
             self.receiver_ip
         )
     }
