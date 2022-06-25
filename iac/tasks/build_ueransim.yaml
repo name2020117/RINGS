@@ -12,7 +12,6 @@
   shell: snap install cmake --classic
   become: true
 
-# FIXME: doesn't actually build due to go error
 - name: Make UERANSIM
   community.general.make:
     chdir: "/home/{{home_dir}}/UERANSIM"

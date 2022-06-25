@@ -1,27 +1,23 @@
 - name: In ~/UERANSIM/config/free5gc-gnb.yaml, change ngapIp
   ansible.builtin.replace:
     path: /home/{{home_dir}}/UERANSIM/config/free5gc-gnb.yaml
-    # WARN: very fragile
-    regexp: "^ngapIp: 127.0.0.1"
-    replace: "ngapIp: {{ue_internal_ip}}"
+    regexp: '^ngapIp: \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+    replace: 'ngapIp: {{ue_internal_ip}}'
 
 - name: In ~/UERANSIM/config/free5gc-gnb.yaml, change gtpIp
   ansible.builtin.replace:
     path: /home/{{home_dir}}/UERANSIM/config/free5gc-gnb.yaml
-    # WARN: very fragile
-    regexp: "^gtpIp: 127.0.0.1"
-    replace: "gtpIp: {{ue_internal_ip}}"
+    regexp: '^gtpIp: \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$'
+    replace: 'gtpIp: {{ue_internal_ip}}'
 
 - name: In ~/UERANSIM/config/free5gc-gnb.yaml, change amf address
   ansible.builtin.replace:
     path: /home/{{home_dir}}/UERANSIM/config/free5gc-gnb.yaml
-    # WARN: very fragile
-    regexp: "^  - address: 127.0.0.1"
-    replace: "  - address: {{core_ip}}"
+    regexp: '^amfConfigs:\n  - address: \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$'
+    replace: "amfConfigs:\n  - address: {{core_ip}}"
 
 - name: In ~/UERANSIM/config/free5gc-gnb.yaml, change OP type to OP
   ansible.builtin.replace:
     path: /home/{{home_dir}}/UERANSIM/config/free5gc-ue.yaml
-    # WARN: very fragile
     regexp: "^opType: 'OPC'"
     replace: "opType: 'OP'"

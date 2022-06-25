@@ -8,6 +8,7 @@
       vars:
         ips: "{{ue_ips}}"
         group_name: ues
+    - include_tasks: ./tasks/install_ansible_requirements.yaml
 
 - name: UERANSIM Playbook
   hosts: ues

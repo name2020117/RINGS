@@ -54,9 +54,16 @@
         regexp: "#advertised.listeners=PLAINTEXT://your.host.name:9092"
         line: "advertised.listeners=PLAINTEXT://{{kafka_broker_ips[0]}}:9092"
 
-    - name: Adding zookeeper connects
+    # redundant, but removes issue if re-running
+    - name: Changing public listener
       lineinfile:
-        path: /home/{{home_dir}}/{{kafka_version}}/config/server.properties
-        regexp: "zookeeper.connect=localhose:2181"
-        line: "zookeeper.connect={{kafka_broker_internal_ip}}:2181"
+        path: "/home/{{home_dir}}/{{kafka_version}}/config/server.properties"
+        regexp: 'advertised.listeners=PLAINTEXT://\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:9092'
+        line: "advertised.listeners=PLAINTEXT://{{kafka_broker_ips[0]}}:9092"
+
+    # - name: Adding zookeeper connects
+    #   lineinfile:
+    #     path: /home/{{home_dir}}/{{kafka_version}}/config/server.properties
+    #     regexp: 'zookeeper.connect=\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:2181'
+    #     line: "zookeeper.connect={{kafka_broker_internal_ip}}:2181"
 ...

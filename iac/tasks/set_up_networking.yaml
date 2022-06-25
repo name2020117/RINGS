@@ -1,17 +1,24 @@
-- name: Networking p1
-  shell: sysctl -w net.ipv4.ip_forward=1
+# sysctl -w net.ipv4.ip_forward=1
+- ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
   become: true
 
-- name: Networking p2
-  shell: iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
+# shell: iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
+- name: Modify iptables
+  ansible.builtin.iptables:
+    table: nat
+    action: "append"
+    chain: "POSTROUTING"
+    # NOTE: could just do ens+ to match any number
+    out_interface: "{{network_interface}}"
+    jump: "MASQUERADE"
   become: true
 
+# shell: sudo systemctl stop ufw;
 - name: Stop ufw
   ansible.builtin.systemd:
     state: stopped
     name: ufw
   become: true
-
-# - name: Networking p3
-#   shell: iptables -I FORWARD 1 -j ACCEPT
-#   become: true

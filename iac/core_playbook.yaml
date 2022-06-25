@@ -8,6 +8,7 @@
       vars:
         ips: "{{core_network_ips}}"
         group_name: core_network
+    - include_tasks: ./tasks/install_ansible_requirements.yaml
 
 - name: Free5gc Playbook
   hosts: core_network
@@ -44,8 +45,9 @@
     - include_tasks: ./tasks/install_node.yaml
       tags: install
 
-    #  FIXME: not working properly,
-    # - include_tasks: ./tasks/set_up_networking.yaml
+    # NOTE: this should work, but I need to check
+    - include_tasks: ./tasks/set_up_networking.yaml
+
     # NOTE: just clones directories due to Make issues, post ansible script required, see below
     - include_tasks: ./tasks/build_core.yaml
     - name: Copy Make script to VM
@@ -53,16 +55,19 @@
         src: ./scripts/make_free5gc.sh
         dest: "/home/{{home_dir}}/make_free5gc.sh"
         mode: '0777'
+
     - name: Copy test all script to VM
       ansible.builtin.copy:
         src: ./scripts/test_all_free5gc.sh
         dest: "/home/{{home_dir}}/free5gc/test_all_free5gc.sh"
         mode: '0777'
+
     - name: Copy networking script to VM
       ansible.builtin.copy:
         src: ./scripts/set_up_networking.sh
         dest: "/home/{{home_dir}}/set_up_networking.sh"
         mode: '0777'
+
     - include_tasks: ./tasks/set_free5gc_params.yaml
       vars:
         - core_ip: "{{core_network_internal_ip}}"
