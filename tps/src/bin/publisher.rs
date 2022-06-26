@@ -30,8 +30,9 @@ fn main() -> Result<(), opentelemetry::trace::TraceError> {
                 .create()
                 .unwrap();
         println!("connected to server");
-        for _ in 1..(args.n_messages) {
+        for i in 1..(args.n_messages) {
             let message = Message::new(
+                i,
                 local_ip().unwrap().to_string(),
                 args.broker_address.clone(),
                 args.topic.clone(),

@@ -11,7 +11,7 @@ fn main() {
     println!("Running with args = {:?}", args);
     // let mut wtr = csv::Writer::from_writer(io::stdout());
     let mut wtr = csv::Writer::from_path("logs/send_receive_times.csv").unwrap();
-    wtr.write_record(&["sender", "send_time", "receive_time"])
+    wtr.write_record(&["sender", "send_time", "receive_time", "message_number"])
         .unwrap();
     let mut consumer = Consumer::from_hosts(vec![format!("{}:{}", args.broker_address, args.port)])
         .with_topic(args.topic)
@@ -32,6 +32,7 @@ fn main() {
                             message.sender_ip,
                             message.send_time.unwrap().to_string(),
                             message.receive_time.unwrap().to_string(),
+                            message.message_number.to_string(),
                         ])
                         .unwrap();
                     }

@@ -8,6 +8,7 @@ use std::{
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Message {
+    pub message_number: u32,
     pub sender_ip: String,
     pub broker_ip: String,
     pub receiver_ip: String,
@@ -20,12 +21,14 @@ pub struct Message {
 
 impl Message {
     pub fn new(
+        message_number: u32,
         sender_ip: String,
         broker_ip: String,
         topic: String,
         send_time: Option<DateTime<Utc>>,
     ) -> Self {
         Self {
+            message_number,
             sender_ip,
             send_time,
             receive_time: None,
@@ -63,7 +66,8 @@ impl Display for Message {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(
             f,
-            "Message sent at {} from {} -> {}.\nCollected message at {}",
+            "Message {} sent at {} from {} -> {}.\nCollected message at {}",
+            self.message_number,
             self.send_time.unwrap(),
             self.sender_ip,
             self.broker_ip,
