@@ -9,6 +9,8 @@ use std::{
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Message {
     pub message_number: u32,
+    pub interface: String,
+    pub interface_ip: String,
     pub sender_ip: String,
     pub broker_ip: String,
     pub receiver_ip: String,
@@ -22,6 +24,8 @@ pub struct Message {
 impl Message {
     pub fn new(
         message_number: u32,
+        interface: String,
+        interface_ip: String,
         sender_ip: String,
         broker_ip: String,
         topic: String,
@@ -29,6 +33,8 @@ impl Message {
     ) -> Self {
         Self {
             message_number,
+            interface,
+            interface_ip,
             sender_ip,
             send_time,
             receive_time: None,

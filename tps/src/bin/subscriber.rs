@@ -1,18 +1,20 @@
-// use chrono::{offset::Utc, DateTime};
 use clap::Parser;
 use kafka::consumer::Consumer;
-use std::{str, time::SystemTime};
+use local_ip_address::local_ip;
+use std::{fs, str, time::SystemTime};
 use teleps::cli::Args;
 use teleps::message::Message;
-use local_ip_address::local_ip;
 
 fn main() {
     let args = Args::parse();
     println!("Running with args = {:?}", args);
-    // let mut wtr = csv::Writer::from_writer(io::stdout());
+    match fs::create_dir("./logs") {
+        Ok(()) => {}
+        Err(e) => {
+            println!("{}", e);
+        }
+    };
     let mut wtr = csv::Writer::from_path("logs/send_receive_times.csv").unwrap();
-    wtr.write_record(&["sender", "send_time", "receive_time", "message_number"])
-        .unwrap();
     let mut consumer = Consumer::from_hosts(vec![format!("{}:{}", args.broker_address, args.port)])
         .with_topic(args.topic)
         .create()
@@ -28,13 +30,8 @@ fn main() {
                         message.add_reciever_ip(local_ip().unwrap().to_string());
                         println!("{}", message);
                         println!("message time = {}\n", &message.duration().unwrap());
-                        wtr.write_record(&[
-                            message.sender_ip,
-                            message.send_time.unwrap().to_string(),
-                            message.receive_time.unwrap().to_string(),
-                            message.message_number.to_string(),
-                        ])
-                        .unwrap();
+                        // this should not be an error, since it should always write
+                        wtr.serialize(message).unwrap();
                     }
                     Err(e) => println!("received invalid utf8 sequence: {}", e),
                 }

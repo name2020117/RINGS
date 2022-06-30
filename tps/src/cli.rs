@@ -3,7 +3,9 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 pub struct Args {
-    /// Name of the person to greet
+    #[clap(short, long, value_parser, default_value="lo")]
+    pub interface: String,
+
     #[clap(short, long, value_parser, default_value="127.0.0.1")]
     pub broker_address: String,
 
