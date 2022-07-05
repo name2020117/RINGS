@@ -48,6 +48,7 @@ impl Message {
         serde_json::from_str(data)
     }
 
+    // should use rust office implementation to string
     pub fn to_string(&self) -> Result<String> {
         serde_json::to_string(&self)
     }

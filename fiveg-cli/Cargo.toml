@@ -1,0 +1,20 @@
+[package]
+name = "fiveg-cli"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "5g-tool"
+path = "src/bin/tool.rs"
+
+
+[dependencies]
+# Note: if the sync API is enabled, the async-specific types will be privatized (e.g. mongodb::Client). The sync-specific types can be imported from mongodb::sync (e.g. mongodb::sync::Client).
+mongodb = {version="2.2.2", default-features=false, features=["sync"]}
+anyhow = "1.0"
+serde = {version = "1.0", features = ["derive"]}
+clap = { version = "3.2.6", features = ["derive"] }
+regex = "1.5"
+bson = "2.3.0"
