@@ -38,7 +38,7 @@ fn main() -> Result<()> {
     let mut subscription_provision_sm_vec_1: Vec<Document> = Vec::new();
     let mut subscription_provision_sm_vec_2: Vec<Document> = Vec::new();
     let mut subscription_provision_smf_vec: Vec<Document> = Vec::new();
-    for i in args.imsi..(args.imsi + u64::from(args.n_subscribers)) {
+    for i in args.imsi..(args.imsi + u64::from(args.n_subscribers) + 1) {
         policy_ue_am_vec.push(policy_am_doc(&i.to_string()));
         policy_ue_sm_vec.push(policy_sm_doc(&i.to_string()));
         subscription_auth_vec.push(subscription_auth_doc(&i.to_string()));

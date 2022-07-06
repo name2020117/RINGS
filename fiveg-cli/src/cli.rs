@@ -12,7 +12,6 @@ pub struct Args {
     #[clap(short, long, value_parser, default_value = "1")]
     pub n_subscribers: u32,
 
-    // need error check
-    #[clap(short, long, value_parser, default_value = "208930000000003")]
+    #[clap(short, long, value_parser, default_value = "208930000000000")]
     pub imsi: u64,
 }
