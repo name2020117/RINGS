@@ -46,7 +46,7 @@ mod tests {
     #[test]
     fn test_imsi_from_u64() {
         assert_eq!(
-            validate_imsi(&208930000000005u64.to_string()),
+            validate_imsi(&208930000000000u64.to_string()),
             true,
             "not 20893 mobile country code"
         );
@@ -88,9 +88,17 @@ pub fn policy_sm_doc(imsi: &str) -> Document {
     doc! { "smPolicySnssaiData" : { "01010203" : { "snssai" : { "sst" : 1, "sd" : "010203" }, "smPolicyDnnData" : { "internet" : { "dnn" : "internet" }, "internet2" : { "dnn" : "internet2" } } }, "01112233" : { "snssai" : { "sst" : 1, "sd" : "112233" }, "smPolicyDnnData" : { "internet" : { "dnn" : "internet" }, "internet2" : { "dnn" : "internet2" } } } }, "ueId" : format!("imsi-{}", imsi) }
 }
 
-pub fn subscription_auth_doc(imsi: &str) -> Document {
+pub fn subscription_auth_status_doc(imsi: &str) -> Document {
     assert_eq!(true, validate_imsi(imsi));
-    doc! { "authenticationMethod" : "5G_AKA", "permanentKey" : { "permanentKeyValue" : "8baf473f2f8fd09487cccbd7097c6862", "encryptionKey" : 0, "encryptionAlgorithm" : 0 }, "sequenceNumber" : "16f3b3f70fc2", "authenticationManagementField" : "8000", "milenage" : { "op" : { "opValue" : "", "encryptionKey" : 0, "encryptionAlgorithm" : 0 } }, "opc" : { "opcValue" : "8e27b6af0e692e750f32667a3b14605d", "encryptionKey" : 0, "encryptionAlgorithm" : 0 }, "ueId" : format!("imsi-{}", imsi)
+    doc! {
+         "servingNetworkName" : "5G:mnc093.mcc208.3gppnetwork.org", "ueId" : format!("imsi-{}", imsi), "nfInstanceId" : "bc27d68d-661b-4f31-b920-c9a5a686a361", "success" : true, "timeStamp" : "2022-07-06T14:48:07.782951032Z", "authType" : "5G_AKA"
+    }
+}
+
+pub fn subscription_auth_subscription_doc(imsi: &str) -> Document {
+    assert_eq!(true, validate_imsi(imsi));
+    doc! {
+         "opc" : { "encryptionKey" : 0, "opcValue" : "", "encryptionAlgorithm" : 0 }, "ueId" : format!("imsi-{}", imsi), "authenticationMethod" : "5G_AKA", "permanentKey" : { "encryptionAlgorithm" : 0, "encryptionKey" : 0, "permanentKeyValue" : "8baf473f2f8fd09487cccbd7097c6862" }, "sequenceNumber" : "16f3b3f70fc6", "authenticationManagementField" : "8000", "milenage" : { "op" : { "encryptionAlgorithm" : 0, "encryptionKey" : 0, "opValue" : "8e27b6af0e692e750f32667a3b14605d" } }
     }
 }
 
