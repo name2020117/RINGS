@@ -1,0 +1,70 @@
+- name: "Uninstall older versions of Docker"
+  apt:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - docker
+    - docker-engine
+    - docker.io
+    - containerd
+    - runc
+  become: true
+
+- name: "Install underlying packages needed for Docker"
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  loop:
+    - curl
+    - apt-transport-https
+    - ca-certificates
+    - gnupg
+    - lsb-release
+  become: true
+
+- name: "Add apt key for Docker"
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present   # this is default
+    keyring: /usr/share/keyrings/docker-archive-keyring.gpg
+  become: true
+
+- name: Add Docker repository to apt
+  apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu focal stable"
+    state: present
+    filename: docker.list
+  become: true
+
+- name: Install Docker
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+  become: true
+
+- name: Add a group called docker
+  group:
+    name: docker
+    state: present
+  become: true
+
+- name: Add user to docker group
+  user:
+    name: "{{ user }}"
+    append: yes
+    groups: docker
+  become: true
+
+  # shell: sudo systemctl enable ufw;
+- name: Start Docker
+  ansible.builtin.systemd:
+    state: started
+    enabled: true
+    name: docker
+  become: true

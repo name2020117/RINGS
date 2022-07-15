@@ -3,23 +3,28 @@ ssh_key_location: ~/.ssh/RINGS_TACC.pem
 # TODO: Need to make these tuples to scale
 core_network_ips:
   - 129.114.25.92
-core_network_internal_ip: 10.56.2.245
+core_network_internal_ip: 10.56.3.36
 # WARN: currently, I do not iterate through all UE at once, and it has to be done manually.
 # FIXME: Change this so the ansible script can iterate through all at once
 ue_ips:
-  # - 129.114.26.36 # ue1
+  - 129.114.26.36 # ue1
   # - 129.114.26.92 # ue2
-  - 129.114.27.215 # ue3
-# ue1_internal_ip: 10.56.3.18 # ue1
+  # # - 129.114.27.215 # ue3
+  # - 129.114.27.243 # ue4
+ue1_internal_ip: 10.56.2.36 # ue1
 # ue1_internal_ip: 10.56.2.120 #ue2
-ue1_internal_ip: 10.56.3.43 # ue3
+# ue1_internal_ip: 10.56.3.43 # ue3
 network_interface: "ens3"
+k8_master_public_ip: 129.114.26.181
+k8_master_private_ip: 10.56.1.110
+k8_minion_public_ips:
+  - 129.114.27.91
 
 home_dir: cc
+user: cc
 core_packages:
   - net-tools
   - wget
-  - mongodb
   - git
   - gcc
   - g++
@@ -30,6 +35,7 @@ core_packages:
   - libmnl-dev
   - libyaml-dev
   - npm
+  # - mongodb # a special install is needed
 
 ran_packages:
   - net-tools
@@ -37,6 +43,10 @@ ran_packages:
   - libsctp-dev
   - lksctp-tools
   - iproute2
+
+universal_packages:
+  - wget
+  - git
 
 go_tarball: "go1.15.8.linux-amd64.tar.gz"
 go_download_location: "https://golang.org/dl/{{ go_tarball }}"
@@ -52,4 +62,6 @@ kafka_version: kafka_2.13-3.2.0
 
 ansible_requirements:
   - "ansible.posix"
+  - "kubernetes.core"
+  - "openstack.cloud"
 ...

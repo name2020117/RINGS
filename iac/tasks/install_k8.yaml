@@ -1,0 +1,37 @@
+- name: Install packaged needed for K8s
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+  become: true
+
+- name: Add apt key for k8
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+    keyring: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+  become: true
+
+  # NOTE: need to make sure this is up to date and works with specific image
+- name: Add K8s repository to apt
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] http://apt.kubernetes.io/ kubernetes-xenial main"
+    state: present
+    filename: kubernetes.list
+  become: true
+
+- name: Install K8s
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  loop:
+    - kubeadm
+    - kubelet
+    - kubectl
+    - kubernetes-cni
+  become: true
