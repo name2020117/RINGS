@@ -6,7 +6,7 @@
     - name: Add K8 master to hosts
       add_host:
         ansible_ssh_private_key_file: "{{ssh_key_location}}"
-        ansible_user: "cc"
+        ansible_user: "{{user}}"
         hostname: "{{ k8_master_public_ip }}"
         groups: "k8, k8_master"
 
@@ -18,15 +18,11 @@
         groups: "k8, k8_minions"
       loop: "{{k8_minion_public_ips}}"
 
-    - include_tasks: ./tasks/install_ansible_requirements.yaml
-      tags: install
-
 - name: Set up K8
   hosts: k8
   remote_user: root
   vars_files:
     - variables.yaml
-  become: yes
   tasks:
     - name: Disable swap for current session
       command: swapoff -a
@@ -46,27 +42,34 @@
         name: ufw
       become: true
 
-    - include_tasks:  ./tasks/install_packages_ubuntu.yaml
-      vars:
-        packages: "{{universal_packages}}"
-      tags: install
     - include_tasks: ./tasks/install_docker.yaml
-      tags: install
+      tags: install, install_docker
     - include_tasks: ./tasks/install_k8.yaml
+      tags: install, install_k8
+    - include_tasks: ./tasks/install_gtp.yaml
       tags: install
+    - include_tasks: ./tasks/reset_k8_info.yaml
+      tags: reset
 
-# - name: Set up K8 master
-#   hosts: k8_master
-#   remote_user: root
-#   vars_files:
-#     - variables.yaml
-#   become: yes
-#   tasks:
-#     - include_tasks:  ./tasks/install_packages_ubuntu.yaml
-#       vars:
-#         packages: "{{universal_packages}}"
-#       tags: install
-#     - include_tasks: ./tasks/install_docker.yaml
-#       tags: install
-#     - include_tasks: ./tasks/install_k8.yaml
-#       tags: install
+    # WARNING: this is a potential cause of problems. For some reason, things work well if there is no config file (maybe the ubuntu default is bad).
+    - include_tasks: ./tasks/configure_containerd.yaml
+      tags: reset
+
+- name: K8 master only tasks
+  hosts: k8_master
+  remote_user: root
+  vars_files:
+    - variables.yaml
+  tasks:
+    - include_tasks: ./tasks/initialize_k8_cluster.yaml
+      tags: start_cluster
+    - include_tasks: ./tasks/install_multus.yaml
+
+- name: K8 minion only tasks
+  hosts: k8_minions
+  remote_user: root
+  vars_files:
+    - variables.yaml
+  tasks:
+    - include_tasks: ./tasks/join_k8_cluster.yaml
+      tags: join_cluster

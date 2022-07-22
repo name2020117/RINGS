@@ -1,0 +1,33 @@
+- name: Clone gtp5g
+  git:
+    repo: https://github.com/free5gc/gtp5g.git
+    dest: "/home/{{home_dir}}/gtp5g" # TODO: need to make variable for Chameleon
+    clone: true
+  become: false
+  ignore_errors: true
+
+- name: Get kernell version
+  shell: uname -a
+  ignore_errors: true
+  register: uname_result
+
+- name: print uname result with regex just to confirm it works
+  debug:
+    msg: "linux-headers-{{uname_result.stdout | regex_search('[0-9]+.[0-9]+.[0-9]+-[0-9]+-generic')}}"
+
+- name: Install Kernel Headers
+  apt:
+    name: "linux-headers-{{uname_result.stdout | regex_search('[0-9]+.[0-9]+.[0-9]+-[0-9]+-generic')}}"
+    state: latest
+    update_cache: yes
+  become: true
+
+- name: Make Gtp
+  make:
+    chdir: "/home/{{home_dir}}/gtp5g"
+
+- name: Install Gtp
+  make:
+    chdir: "/home/{{home_dir}}/gtp5g"
+    target: install
+  become: true

@@ -1,6 +1,24 @@
 ---
+# Necessary ansible packages for playbooks
+# Can be installed locally with "ansible-galaxy collection install {{item}}"
+ansible_requirements:
+  - "ansible.posix"
+  - "kubernetes.core"
+  - "openstack.cloud"
+
+# Needed for every playbook
 ssh_key_location: ~/.ssh/RINGS_TACC.pem
-# TODO: Need to make these tuples to scale
+home_dir: cc
+user: cc
+
+# Needed for K8 playbooks (master.yaml)
+k8_master_public_ip: 129.114.26.181
+k8_minion_public_ips:
+  - 129.114.27.91
+  - 129.114.24.200
+
+# Below are needed for core and ran playbooks
+
 core_network_ips:
   - 129.114.25.92
 core_network_internal_ip: 10.56.3.36
@@ -15,13 +33,8 @@ ue1_internal_ip: 10.56.2.36 # ue1
 # ue1_internal_ip: 10.56.2.120 #ue2
 # ue1_internal_ip: 10.56.3.43 # ue3
 network_interface: "ens3"
-k8_master_public_ip: 129.114.26.181
-k8_master_private_ip: 10.56.1.110
-k8_minion_public_ips:
-  - 129.114.27.91
 
-home_dir: cc
-user: cc
+# home_dir and user are 'cc' on chameleon, and 'ubuntu' on aws
 core_packages:
   - net-tools
   - wget
@@ -44,10 +57,6 @@ ran_packages:
   - lksctp-tools
   - iproute2
 
-universal_packages:
-  - wget
-  - git
-
 go_tarball: "go1.15.8.linux-amd64.tar.gz"
 go_download_location: "https://golang.org/dl/{{ go_tarball }}"
 go_tarball_checksum: "sha256:d3379c32a90fdf9382166f8f48034c459a8cc433730bc9476d39d9082c94583b"
@@ -60,8 +69,4 @@ kafka_broker_ips:
 kafka_broker_internal_ip: 10.56.1.60
 kafka_version: kafka_2.13-3.2.0
 
-ansible_requirements:
-  - "ansible.posix"
-  - "kubernetes.core"
-  - "openstack.cloud"
 ...

@@ -1,0 +1,8 @@
+- name: "Copy join command onto minion"
+  copy:
+    src: ./cluster_join_command.sh
+    dest: "/home/{{home_dir}}/cluster_join_command.sh"
+
+- name: Join minion to k8 cluster
+  shell: sh cluster_join_command.sh
+  become: true

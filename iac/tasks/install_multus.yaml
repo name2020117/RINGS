@@ -1,0 +1,9 @@
+- name: Clone Multus
+  git:
+    repo: https://github.com/k8snetworkplumbingwg/multus-cni.git
+    dest: "/home/{{home_dir}}/multus-cni"
+    clone: true
+    update: true
+
+- name: Apply multus with kubectl
+  shell: "cat /home/{{home_dir}}/multus-cni/deployments/multus-daemonset-thick-plugin.yml | kubectl apply -f -"

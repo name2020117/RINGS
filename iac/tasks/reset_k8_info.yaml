@@ -1,0 +1,15 @@
+- name: Reset cluster in case there existed one already
+  shell: kubeadm reset -f
+  become: true
+
+- name: Remove /etc/cni/net.d directory if it exists
+  ansible.builtin.file:
+    path: /etc/cni/net.d
+    state: absent
+  become: true
+
+- name: Remove ~/.kube directory if it exists
+  ansible.builtin.file:
+    path: "home/{{home_dir}}/.kube"
+    state: absent
+  become: true
