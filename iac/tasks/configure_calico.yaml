@@ -1,0 +1,21 @@
+- name: Install calico ctl
+  ansible.builtin.get_url:
+    url: https://github.com/projectcalico/calico/releases/download/v3.23.3/calicoctl-linux-amd64
+    dest: /usr/local/bin/kubectl-calico
+    mode: '0777' # chmod +x ... TODO: clearly this has too many permissions for +x
+  become: true
+
+- name: Calico apply on forward traffic
+  shell: |
+    kubectl calico apply -f - <<EOF
+    - apiVersion: projectcalico.org/v3
+      kind: GlobalNetworkPolicy
+      metadata:
+        name: empty-default-deny
+      spec:
+        types:
+          - Ingress
+          - Egress
+        selector: has(host-endpoint)
+        applyOnForward: true
+    EOF

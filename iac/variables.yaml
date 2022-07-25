@@ -15,7 +15,7 @@ user: cc
 k8_master_public_ip: 129.114.26.181
 k8_minion_public_ips:
   - 129.114.27.91
-  - 129.114.24.200
+  # - 129.114.24.200
 
 # Below are needed for core and ran playbooks
 
