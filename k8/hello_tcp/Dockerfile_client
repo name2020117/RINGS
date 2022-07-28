@@ -7,4 +7,5 @@ EXPOSE 8080/tcp
 
 RUN cargo install --path .
 
-CMD ["client"]
+# ENTRYPOINT ["client"]
+# CMD [""]

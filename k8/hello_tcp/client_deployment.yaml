@@ -1,0 +1,23 @@
+---
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tcp-client
+spec: # where we define the desired state of our deployment
+  selector:
+    matchLabels:
+      app: tcp-client
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app:  tcp-client
+    spec:
+      containers:
+      - name: tcp-client
+        image: hunterbaxter/tcp_client:latest
+        imagePullPolicy: IfNotPresent
+        command: ["client"]
+        args: ["-a", "tcp-server"]
+...

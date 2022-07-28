@@ -1,0 +1,23 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tcp-server
+spec:
+  selector:
+    matchLabels:
+      app: tcp-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tcp-server
+    spec:
+      containers:
+      - name: tcp-server
+        image: hunterbaxter/tcp_server
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: tcp
+            containerPort:  8080
+...

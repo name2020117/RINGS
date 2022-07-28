@@ -3,11 +3,18 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile_server
-    network_mode: host
+    # network_mode: host
+    ports:
+      - 8080:8080
   client:
     build:
       context: ./
       dockerfile: Dockerfile_client
-    network_mode: host
+    # network_mode: host
+    deploy:
+      mode: replicated
+      replicas: 2
     depends_on:
       - server
+    command:
+      - client -a server
