@@ -13,12 +13,12 @@ user: cc
 
 # Needed for K8 playbooks (master.yaml)
 k8_master_public_ip: 129.114.26.181
+k8_master_private_ip: 10.56.0.57
 k8_minion_public_ips:
   - 129.114.27.91
   # - 129.114.24.200
 
 # Below are needed for core and ran playbooks
-
 core_network_ips:
   - 129.114.25.92
 core_network_internal_ip: 10.56.3.36

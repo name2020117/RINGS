@@ -50,7 +50,6 @@
       tags: install
     - include_tasks: ./tasks/reset_k8_info.yaml
       tags: reset
-
     # WARNING: this is a potential cause of problems. For some reason, things work well if there is no config file (maybe the ubuntu default is bad).
     - include_tasks: ./tasks/configure_containerd.yaml
       tags: reset
@@ -61,19 +60,19 @@
   vars_files:
     - variables.yaml
   tasks:
-    # - include_tasks: ./tasks/make_docker_registry.yaml
+#     # - include_tasks: ./tasks/make_docker_registry.yaml
     - include_tasks: ./tasks/initialize_k8_cluster.yaml
       tags: start_cluster
-    - name: Sleep for 60 seconds for cluster to initialize
+    - name: Sleep for 30 seconds for cluster to initialize
       ansible.builtin.wait_for:
         timeout: 30
-    - include_tasks: ./tasks/install_multus.yaml
-      tags: start_cluster
-    - name: Sleep for 30 seconds to wait for multus
-      ansible.builtin.wait_for:
-        timeout: 30
-    - include_tasks: ./tasks/configure_calico.yaml
-      tags: start_cluster
+#     - include_tasks: ./tasks/install_multus.yaml
+#       tags: start_cluster
+#     - name: Sleep for 30 seconds to wait for multus
+#       ansible.builtin.wait_for:
+#         timeout: 30
+#     - include_tasks: ./tasks/configure_calico.yaml
+#       tags: start_cluster
 
 - name: K8 minion only tasks
   hosts: k8_minions

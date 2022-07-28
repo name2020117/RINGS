@@ -1,19 +1,17 @@
-- name: Start Cluster
-  shell: kubeadm init --pod-network-cidr=192.168.0.0/16
-  # register: output
-  become: true
+# - name: Start Cluster Calico
+#   shell: kubeadm init --pod-network-cidr=192.168.0.0/16
+#   # register: output
+#   become: true
 
+- name: Start Cluster Flannel
+  shell: "kubeadm init --control-plane-endpoint {{k8_master_private_ip}} --pod-network-cidr=10.244.0.0/16"
+  become: true
 
 - name: Add .kube directory
   ansible.builtin.file:
     path: "/home/{{home_dir}}/.kube"
     state: directory
     mode: '0777'
-
-# TODO: make this ansible way
-# - name: Copy kubernetes admin file
-#   shell: "cp -i /etc/kubernetes/admin.conf /home/{{home_dir}}/.kube/config"
-#   become: true
 
 # sudo cp -i /etc/kubernetes/admin.conf /home/{{home_dir}}/.kube/config
 - name: Copy kubernetes admin file
@@ -24,12 +22,6 @@
     mode: '0777'
   become: true
 
-
-# # TODO: make this ansible way
-# - name: change .kube permissions
-#   shell: "chown $(id -u):$(id -g) /home/{{home_dir}}/.kube/config"
-#   become: true
-
 # https://stackoverflow.com/questions/57070583/using-chown-command-in-ansible
 # sudo chown $(id -u):$(id -g) $HOME/.kube/config"
 - name: Change ~/kube/config file permission
@@ -39,11 +31,13 @@
     group: "{{ ansible_effective_group_id }}"
   become: true
 
-- name: "Networking Calico 1"
-  shell: kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
+# - name: "Networking Calico 1"
+#   shell: kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
+# - name: "Networking Calico 2"
+#   shell: kubectl create -f https://projectcalico.docs.tigera.io/manifests/custom-resources.yamlS
 
-- name: "Networking Calico 2"
-  shell: kubectl create -f https://projectcalico.docs.tigera.io/manifests/custom-resources.yaml
+- name: "Networking Flannel"
+  shell: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
 
 - name: "Get cluster join command"
   shell: "kubeadm token create --print-join-command"
