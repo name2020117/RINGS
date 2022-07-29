@@ -18,6 +18,5 @@ spec:
         image: hunterbaxter/tcp_server
         imagePullPolicy: IfNotPresent
         ports:
-          - name: tcp
-            containerPort:  8080
+          - containerPort:  8080
 ...
