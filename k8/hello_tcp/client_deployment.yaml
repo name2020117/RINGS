@@ -19,5 +19,5 @@ spec: # where we define the desired state of our deployment
         image: hunterbaxter/tcp_client:latest
         imagePullPolicy: IfNotPresent
         command: ["client"]
-        args: ["-a", "tcp-server"]
+        args: ["-a", "tcp-server", "-p", "30000"]
 ...
