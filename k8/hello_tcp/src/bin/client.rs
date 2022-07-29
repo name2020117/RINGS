@@ -37,6 +37,6 @@ fn main() -> std::io::Result<()> {
         str::from_utf8(&buffer[0..n]).unwrap(),
         stream.peer_addr()?
     )?;
-    sleep(time::Duration::from_secs(300));
+    sleep(time::Duration::from_secs(900));
     Ok(())
 }
